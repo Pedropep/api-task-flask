@@ -33,3 +33,34 @@ def teste_get_byId():
         assert response.status_code == 200
         response_json = response.json()
         assert tarefa_id == response_json['id']
+
+def teste_put_tarefa():
+    payload = {
+            "titulo": "Teste de Atualização",
+            "descricao":"Teste da requisição put",
+            "status": True
+        }
+    
+    if tarefa:
+        tarefa_id = tarefa[0]
+        response = requests.put(f"{BASE_URL}/task/{tarefa_id}", json=payload)
+        assert response.status_code == 200
+        response_json = response.json()
+        assert "message" in response_json
+
+        response = requests.get(f"{BASE_URL}/task/{tarefa_id}")
+        assert response.status_code == 200
+        response_json = response.json()
+        assert tarefa_id == response_json['id']
+        assert payload["titulo"] == response_json['titulo']
+        assert payload["descricao"] == response_json['descricao']
+        assert payload["status"] == response_json['status']
+
+def teste_delete_tarefa():
+    if tarefa:
+        tarefa_id = tarefa[0]
+        response = requests.delete(f"{BASE_URL}/task/{tarefa_id}")
+        assert response.status_code == 200
+        response_json = response.json()
+        assert "message" in response_json
+        
